@@ -26,7 +26,7 @@ module.exports = {
 
   output: {
     //
-    filename: '[name].built.js',
+    filename: 'js/[name].built.js',
 
     /**
      * *__dirname: A variale of nodejs.
@@ -80,6 +80,10 @@ module.exports = {
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
+        generator: {
+          publicPath: 'imgs/',
+          outputPath: 'imgs/',
+        },
       },
       // loader for fonts
       {

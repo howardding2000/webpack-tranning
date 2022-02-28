@@ -15,10 +15,10 @@ function component() {
   img.alt = '4q';
 
   const box1 = document.createElement('div');
-  box.id = 'box1';
+  box1.id = 'box1';
 
   const box2 = document.createElement('div');
-  box.id = 'box2';
+  box2.id = 'box2';
 
   element.appendChild(img);
   element.appendChild(box1);

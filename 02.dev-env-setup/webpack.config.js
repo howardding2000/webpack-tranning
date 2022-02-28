@@ -2,6 +2,9 @@ const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
+
+const ESLintPlugin = require('eslint-webpack-plugin');
+
 // 设置Nodejs环境变量
 process.env.NODE_ENV = 'development';
 
@@ -20,7 +23,8 @@ module.exports = {
         use: [
           {
             /**
-             * ! When I use  MiniCssExtractPlugin.loader replace of 'style-loader' to loade css file with imges, it will show error...
+             * ! When I use  MiniCssExtractPlugin.loader replace of 'style-loader'
+             * ! to loade css file with imges, it will show error...
              * ? How to solve it?
              * * solution: disable webpack url() handling from css-loader
              * * { loader: 'css-loader', options: { url: false } }
@@ -50,6 +54,24 @@ module.exports = {
               },
             },
           },
+
+          /**
+           * * 语法检查：eslint-loader eslint
+           * !!! This loader has been deprecated. Please use eslint-webpack-plugin
+           * ! only check sef code, do not check 3th part libs (node_modules)
+           *  * check rules: package.json->eslintCnfig
+           *  "eslintConfig": {
+           *      "extends": "airbnb-base"
+           *   } 
+           *  * airbnb -> eslint-config-airbnb or eslint-config-airbnb-base(without react)
+           *  * request: eslint and eslint-plugin-import.
+           * {
+              test: /\.js$/,
+              exclude: /node_modules/,
+              loader: 'eslint-loader',
+              options: {}
+            },
+           */
         ],
       },
       {
@@ -84,11 +106,25 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
     }),
+    // save css into folder
     new MiniCssExtractPlugin({
       filename: 'css/built.css',
     }),
     // optimize css file by using 'css-minimizer-webpack-plugin'
-    new CssMinimizerWebpackPlugin()
+    new CssMinimizerWebpackPlugin(),
+    /**
+     * * 语法检查：eslint eslint-webpack-plugin
+     *  * check rules: package.json->eslintCnfig
+     *  "eslintConfig": {
+     *      "extends": "airbnb-base"
+     *   }
+     * * airbnb -> eslint-config-airbnb or eslint-config-airbnb-base(without react)
+     * * request: eslint and eslint-plugin-import.
+     */
+    new ESLintPlugin({
+      extensions: 'js', //by default
+      exclude: 'node_modules', //by default
+    }),
   ],
 
   mode: 'development',

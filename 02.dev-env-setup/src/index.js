@@ -1,13 +1,16 @@
-import _ from 'lodash';
+// import _ from 'lodash';
+// import '@babel/polyfill';
 
 import './css/index.less';
 import './css/test.css';
 
 import ImgSrc from './imgs/4q.png';
 
-function component() {
+// const add = (a, b) => a + b;
+
+const component = () => {
   const element = document.createElement('div');
-  element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+  element.innerHTML = 'Hello webpack';
   element.classList.add('hello');
 
   const img = document.createElement('img');
@@ -25,6 +28,15 @@ function component() {
   element.appendChild(box2);
 
   return element;
-}
+};
+
+const promise = new Promise((resolve) => {
+  setTimeout(() => {
+    console.log('Time over!');
+    resolve();
+  }, 1000);
+});
+
+console.log(promise);
 
 document.body.appendChild(component());

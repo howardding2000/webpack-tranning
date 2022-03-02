@@ -36,7 +36,7 @@ module.exports = {
           },
           {
             loader: 'css-loader',
-            options: { url: false },
+            // options: { url: false },
           },
           {
             /**
@@ -78,7 +78,18 @@ module.exports = {
         test: /\.less$/i,
         use: [
           MiniCssExtractPlugin.loader,
-          { loader: 'css-loader', options: { url: false } },
+          {
+            loader: 'css-loader',
+            // options: { url: false }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [['postcss-preset-env']],
+              },
+            },
+          },
           'less-loader',
         ],
       },

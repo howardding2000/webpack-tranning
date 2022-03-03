@@ -5,9 +5,26 @@ const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
 
 const ESLintPlugin = require('eslint-webpack-plugin');
 
-// 设置Nodejs环境变量
 process.env.NODE_ENV = 'development';
 
+/**
+ * * 1.自动清空build文件夹
+ * * 2.source-map
+ * * 3.oneOf-> 一个文件类型只匹配一个loader执行
+ * * 4.cache:
+ * * 4.1. babel缓存
+ * !        cacheDirectory: true
+ * * 4.2. 文件资源缓存
+ *          hash: 每次构建时，生成唯一的hash值
+ *            问题: 因为js和css同时使用一个hash值，如果重新打包，将导致所有缓存都失效
+ *          chunkhash：根据chunk生成的hash。如果打包来源于同一个chunk，那么hash值一样
+ *            问题： js和css的hash值还是一样的，因为css是在js中被引进来的
+ * !        contenthash：根据文件内容生成hash值，文件内容不变，hash值不变（上线代码性能优化)
+ * *5.tree shaking:去除无用代码
+ *    前提：1.必须使用ES6 module，2.mode开启production
+ *    作用：减少代码体积
+ * *6.code split:主要针对js.
+ */
 const CommonCssLoader = [
   {
     loader: MiniCssExtractPlugin.loader,
@@ -31,7 +48,7 @@ module.exports = {
   entry: './src/index.js',
 
   output: {
-    filename: 'js/built.js',
+    filename: 'js/built.[contenthash:10].js',
     path: resolve(__dirname, 'build'),
     // 自动清空build文件夹
     clean: true,
@@ -40,56 +57,64 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/i,
-        use: [...CommonCssLoader],
-      },
-      {
-        test: /\.less$/i,
-        use: [...CommonCssLoader, 'less-loader'],
-      },
-
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
-        generator: {
-          publicPath: 'imgs/',
-          outputPath: 'imgs/',
-        },
-      },
-
-      {
-        exclude: /\.(html|js|css|less|png|svg|jpg|jpeg|gif)$/i,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-        },
-      },
-      {
-        test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  useBuiltIns: 'usage',
-                  corejs: {
-                    version: 3,
-                  },
-                  targets: {
-                    chrome: '60',
-                    firefox: '50',
-                    ie: '9',
-                    safari: '10',
-                    edge: '17',
-                  },
-                },
-              ],
-            ],
+        // oneOf里面的loader，每个文件只会匹配一个loader
+        oneOf: [
+          {
+            test: /\.css$/i,
+            use: [...CommonCssLoader],
           },
-        },
+          {
+            test: /\.less$/i,
+            use: [...CommonCssLoader, 'less-loader'],
+          },
+          {
+            test: /\.(png|svg|jpg|jpeg|gif)$/i,
+            type: 'asset/resource',
+            generator: {
+              publicPath: 'imgs/',
+              outputPath: 'imgs/',
+            },
+          },
+          {
+            exclude: /\.(html|js|css|less|png|svg|jpg|jpeg|gif)$/i,
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+            },
+          },
+          {
+            test: /\.m?js$/,
+            exclude: /(node_modules|bower_components)/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  [
+                    '@babel/preset-env',
+                    {
+                      useBuiltIns: 'usage',
+                      corejs: {
+                        version: 3,
+                      },
+                      targets: {
+                        chrome: '60',
+                        firefox: '50',
+                        ie: '9',
+                        safari: '10',
+                        edge: '17',
+                      },
+                    },
+                  ],
+                ],
+                /**
+                 * 开启babel缓存
+                 * 第二次构建时，会读取之前的缓存
+                 */
+                cacheDirectory: true,
+              },
+            },
+          },
+        ],
       },
     ],
   },
@@ -103,7 +128,7 @@ module.exports = {
       },
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/built.css',
+      filename: 'css/built.[contenthash:10].css',
     }),
     new CssMinimizerWebpackPlugin(),
 
@@ -113,7 +138,7 @@ module.exports = {
     }),
   ],
 
-  mode: 'development',
+  mode: 'production',
 
   devServer: {
     static: resolve(__dirname, 'build'),

@@ -22,6 +22,11 @@
 - **oneOf**: 一个文件类型只匹配一个 loader 执行,找到了就不再继续往下找
 - **cache**
   - **babel 缓存** -> cacheDirectory: true
+- **thread load**:多进程打包,一般给 babel-loader 用
+- **externals**:防止一些不必要的资源被打包
+- **dll**:单独拆分打包库文件
+  - 配置在 webpack.dll.js 中, 配置单独打包
+  - 在 webpack.config.js 中告诉 webpack 哪些库不需要打包
 
 ### 优化代码运行的性能
 
@@ -58,3 +63,5 @@ import('./test').then(({ mul }) => {
   console.log(mul(4, 5));
 });
 ```
+
+- pwa

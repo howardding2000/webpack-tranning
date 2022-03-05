@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
  *      import('./test').then(({ mul }) => {
  *        console.log(mul(4, 5));
  *      });
+ * * 2. PWA 离线使用
  */
 
 module.exports = {

@@ -2,7 +2,7 @@ const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 /**
- * * 1.code split
+ * * 1.code split:主要针对js.
  * *  1.1 方式1：配置多入口，生成单独的bundle文件。
  * *        缺点：不太灵活，每个文件都要配置
  */

@@ -9,8 +9,8 @@ process.env.NODE_ENV = 'development';
 
 /**
  * * 1.自动清空build文件夹
- * * 2.source-map
- * * 3.oneOf-> 一个文件类型只匹配一个loader执行
+ * * 2.source-map:一种提供源代码到构建后代码的映射技术
+ * * 3.oneOf: 一个文件类型只匹配一个loader执行
  * * 4.cache:
  * * 4.1. babel缓存
  * !        cacheDirectory: true
@@ -23,7 +23,6 @@ process.env.NODE_ENV = 'development';
  * *5.tree shaking:去除无用代码
  *    前提：1.必须使用ES6 module，2.mode开启production
  *    作用：减少代码体积
- * *6.code split:主要针对js.
  */
 const CommonCssLoader = [
   {
@@ -178,6 +177,7 @@ module.exports = {
    * *  cheap-module-source-map
    * *  cheap-souce-map
    * ! Vue & React 默认使用 -> cheap-souce-map
+   * *  --> eval-source-map / eval-cheap-module-source-map
    * ?  -生产环境：源代码要不要隐藏？调试要不要更友好？
    * ! 内联体积非常大，首先排除
    * *  hidden-source-map 只隐藏源代码

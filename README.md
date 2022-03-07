@@ -46,7 +46,7 @@
     - 缺点:不太灵活,每个文件都要配置
   - ! 1.2 方式 2:配置 optimization->splitChunks->chunks,公共文件会打包成单独 chunk
 
-        ```JS
+        ```js
         optimization: {
         splitChunks: {
         chunks: 'all',
